@@ -14,7 +14,8 @@ export class Persona {
   @Column({ name: 'nombre2', nullable: true }) nombre2?: string;
 
   @Column({ name: 'fechanac', type: 'date', nullable: true }) fechaNac?: string;
-  @Column({ name: 'id_sexobiologico', nullable: true }) idSexoBiologico?: number;
+  @Column({ name: 'id_sexobiologico', nullable: true })
+  idSexoBiologico?: number;
 
   @Column({ nullable: true }) direccion?: string;
   @Column({ name: 'tel_movil', nullable: true }) telMovil?: string;

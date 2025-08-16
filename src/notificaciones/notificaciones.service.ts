@@ -25,15 +25,19 @@ export class NotificacionesService {
 
   async listar(query: ListarNotificacionesQuery) {
     const { idUsuario, soloNoLeidas, pagina = 1, tipo, desde, hasta } = query;
-    const take = 10, skip = (pagina - 1) * take;
+    const take = 10,
+      skip = (pagina - 1) * take;
     const where: any = { idUsuario };
-    
+
     if (soloNoLeidas) where.leida = false;
     if (tipo) where.type = tipo;
-    
+
     // Filtros de fecha
     if (desde && hasta) {
-      where.fechaCreacion = Between(new Date(desde), new Date(hasta + 'T23:59:59.999Z'));
+      where.fechaCreacion = Between(
+        new Date(desde),
+        new Date(hasta + 'T23:59:59.999Z'),
+      );
     } else if (desde) {
       where.fechaCreacion = MoreThanOrEqual(new Date(desde));
     } else if (hasta) {
@@ -41,14 +45,14 @@ export class NotificacionesService {
     }
 
     const [rows, total] = await this.repo.findAndCount({
-      where, 
-      order: { fechaCreacion: 'DESC' }, 
-      take, 
+      where,
+      order: { fechaCreacion: 'DESC' },
+      take,
       skip,
     });
 
     // Mapeo de entidad inglés a respuesta español
-    const data = rows.map(n => ({
+    const data = rows.map((n) => ({
       id: n.id,
       idUsuario: n.idUsuario,
       tipo: n.type,
@@ -61,25 +65,25 @@ export class NotificacionesService {
       fechaLectura: n.fechaLectura,
     }));
 
-    return { 
-       total, 
-       pagina, 
-       totalPaginas: Math.ceil(total / take),
-       data 
-     };
-   }
+    return {
+      total,
+      pagina,
+      totalPaginas: Math.ceil(total / take),
+      data,
+    };
+  }
 
-   async conteoNoLeidas(idUsuario: number) {
-     const count = await this.repo.count({
-       where: { idUsuario, leida: false }
-     });
-     return { conteo: count };
-   }
+  async conteoNoLeidas(idUsuario: number) {
+    const count = await this.repo.count({
+      where: { idUsuario, leida: false },
+    });
+    return { conteo: count };
+  }
 
   async marcarLeida(id: number, leida = true) {
     const notif = await this.repo.findOne({ where: { id } });
     if (!notif) throw new NotFoundException('Notificación no encontrada');
-    
+
     notif.leida = leida;
     notif.fechaLectura = leida ? new Date() : null;
     return this.repo.save(notif);

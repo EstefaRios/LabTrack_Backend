@@ -8,7 +8,16 @@ describe('AuditController', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       controllers: [AuditController],
-      providers: [{ provide: AuditService, useValue: { listar: jest.fn().mockResolvedValue({ total: 0, pagina: 1, data: [] }) } }],
+      providers: [
+        {
+          provide: AuditService,
+          useValue: {
+            listar: jest
+              .fn()
+              .mockResolvedValue({ total: 0, pagina: 1, data: [] }),
+          },
+        },
+      ],
     }).compile();
     ctrl = module.get(AuditController);
   });

@@ -12,7 +12,9 @@ export class AuthController {
   constructor(private auth: AuthService) {}
 
   @Post('login-paciente')
-  @ApiOperation({ summary: 'Login paciente por tipo, número y fecha de nacimiento' })
+  @ApiOperation({
+    summary: 'Login paciente por tipo, número y fecha de nacimiento',
+  })
   @Audit('LOGIN_PACIENTE')
   async login(@Body() dto: LoginPacienteDto, @Req() req: any) {
     return this.auth.loginPaciente(dto, req.ipAddr || req.ip);

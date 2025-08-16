@@ -15,7 +15,10 @@ export class AuthService {
   ) {}
 
   async loginPaciente(dto: LoginPacienteDto, ip?: string) {
-    const tipo = await this.listaRepo.findOne({ where: { variable: 'TipoIdentificacion', abreviacion: dto.tipo }, select: ['id'] });
+    const tipo = await this.listaRepo.findOne({
+      where: { variable: 'TipoIdentificacion', abreviacion: dto.tipo },
+      select: ['id'],
+    });
     if (!tipo) throw new NotFoundException('Tipo de identificación inválido');
 
     const persona = await this.personaRepo.findOne({
@@ -28,13 +31,17 @@ export class AuthService {
     if (!persona) throw new NotFoundException('Paciente no encontrado');
 
     const payload = { sub: persona.id, tipo: dto.tipo, ip };
-    const token = await this.jwt.signAsync(payload, { expiresIn: process.env.JWT_EXPIRES || '2h' });
+    const token = await this.jwt.signAsync(payload, {
+      expiresIn: process.env.JWT_EXPIRES || '2h',
+    });
 
     return {
       access_token: token,
       personaId: persona.id,
       nombre: [persona.nombre1, persona.nombre2].filter(Boolean).join(' '),
-      apellidos: [persona.apellido1, persona.apellido2].filter(Boolean).join(' '),
+      apellidos: [persona.apellido1, persona.apellido2]
+        .filter(Boolean)
+        .join(' '),
     };
   }
 }

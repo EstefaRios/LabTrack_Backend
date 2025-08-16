@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import {
@@ -8,7 +12,7 @@ import {
   OrdenDto,
   EstadisticasResultadosDto,
   ProcedimientoConPruebasDto,
-  PruebaConResultadoDto
+  PruebaConResultadoDto,
 } from './resultados.dto';
 import {
   ResultadosCompletos,
@@ -17,7 +21,7 @@ import {
   RespuestaServicio,
   FiltroResultados,
   ESTADOS_RESULTADO,
-  TIPOS_RESULTADO
+  TIPOS_RESULTADO,
 } from './resultados.model';
 
 // Interfaces para el procesamiento interno
@@ -75,7 +79,9 @@ export class ResultadosService {
    * @param idOrden - ID de la orden
    * @returns Resultados estructurados por grupos y procedimientos con información adicional
    */
-  async getResultadosCompletos(idOrden: number): Promise<ResultadosApiResponseDto> {
+  async getResultadosCompletos(
+    idOrden: number,
+  ): Promise<ResultadosApiResponseDto> {
     try {
       // Verificar que la orden existe
       const ordenInfo = await this.verificarOrden(idOrden);
@@ -87,21 +93,23 @@ export class ResultadosService {
       const [grupos, pacienteInfo, estadisticas] = await Promise.all([
         this.getGruposConResultados(idOrden),
         this.getInfoPacienteYOrden(idOrden),
-        this.getEstadisticasResultados(idOrden)
+        this.getEstadisticasResultados(idOrden),
       ]);
 
       return {
         grupos,
         paciente: pacienteInfo.paciente,
         orden: pacienteInfo.orden,
-        estadisticas
+        estadisticas,
       };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;
       }
       console.error('Error obteniendo resultados completos:', error);
-      throw new InternalServerErrorException('Error interno del servidor al obtener resultados');
+      throw new InternalServerErrorException(
+        'Error interno del servidor al obtener resultados',
+      );
     }
   }
 
@@ -110,7 +118,9 @@ export class ResultadosService {
    * @param idOrden - ID de la orden
    * @returns Grupos estructurados con procedimientos y pruebas
    */
-  async getGruposConResultados(idOrden: number): Promise<GrupoConProcedimientosDto[]> {
+  async getGruposConResultados(
+    idOrden: number,
+  ): Promise<GrupoConProcedimientosDto[]> {
     const query = `
       SELECT
         r.id as resultado_id,
@@ -175,8 +185,14 @@ export class ResultadosService {
    * @param idOrden - ID de la orden
    * @returns Información del paciente y orden
    */
-  async getInfoPacienteYOrden(idOrden: number): Promise<{ paciente: PacienteDto; orden: OrdenDto }> {
-    console.log('=== EJECUTANDO getInfoPacienteYOrden para orden:', idOrden, '===');
+  async getInfoPacienteYOrden(
+    idOrden: number,
+  ): Promise<{ paciente: PacienteDto; orden: OrdenDto }> {
+    console.log(
+      '=== EJECUTANDO getInfoPacienteYOrden para orden:',
+      idOrden,
+      '===',
+    );
     const query = `
       SELECT 
         o.id as orden_id,
@@ -234,7 +250,9 @@ export class ResultadosService {
     const data = resultado[0];
 
     if (!data) {
-      throw new NotFoundException(`No se encontró información para la orden ${idOrden}`);
+      throw new NotFoundException(
+        `No se encontró información para la orden ${idOrden}`,
+      );
     }
 
     const paciente: PacienteDto = {
@@ -249,25 +267,35 @@ export class ResultadosService {
       email: data.email,
       direccion: data.direccion,
       eps_nombre: data.eps_nombre,
-      eps_codigo: data.eps_codigo
+      eps_codigo: data.eps_codigo,
     };
 
     // Construir el nombre del médico
     let nombreMedico: string;
-    
+
     if (data.profesional_externo === true) {
       // Es un profesional externo, no hay datos en las tablas relacionadas
       nombreMedico = 'Profesional Externo';
-    } else if (data.prof_nombre1 || data.prof_nombre2 || data.prof_apellido1 || data.prof_apellido2) {
+    } else if (
+      data.prof_nombre1 ||
+      data.prof_nombre2 ||
+      data.prof_apellido1 ||
+      data.prof_apellido2
+    ) {
       // Es un profesional interno con datos disponibles
-      nombreMedico = [data.prof_nombre1, data.prof_nombre2, data.prof_apellido1, data.prof_apellido2]
+      nombreMedico = [
+        data.prof_nombre1,
+        data.prof_nombre2,
+        data.prof_apellido1,
+        data.prof_apellido2,
+      ]
         .filter(Boolean)
         .join(' ');
     } else {
       // Caso por defecto
       nombreMedico = 'No especificado';
     }
-    
+
     console.log('Debug - Datos del profesional:', {
       prof_nombre1: data.prof_nombre1,
       prof_nombre2: data.prof_nombre2,
@@ -276,14 +304,14 @@ export class ResultadosService {
       profesional_externo: data.profesional_externo,
       nombreMedico: nombreMedico,
       id_profesional_ordena: data.id_profesional_ordena,
-      orden_id: data.orden_id
+      orden_id: data.orden_id,
     });
 
     const orden: OrdenDto = {
       id: data.orden_id,
       numero: data.orden || '',
       fecha: data.fecha_orden || '',
-      profesional_externo: nombreMedico
+      profesional_externo: nombreMedico,
     };
 
     return { paciente, orden };
@@ -303,16 +331,16 @@ export class ResultadosService {
 
     const resultado = await this.dataSource.query(query, [idOrden]);
     const data = resultado[0];
-    
+
     if (!data) {
       return null;
     }
-    
+
     return {
       id: data.id,
       numero: data.orden || '',
       fecha: data.fecha || '',
-      profesional_externo: data.profesional_externo
+      profesional_externo: data.profesional_externo,
     };
   }
 
@@ -321,7 +349,9 @@ export class ResultadosService {
    * @param idOrden - ID de la orden
    * @returns Estadísticas de la orden
    */
-  async getEstadisticasResultados(idOrden: number): Promise<EstadisticasResultadosDto> {
+  async getEstadisticasResultados(
+    idOrden: number,
+  ): Promise<EstadisticasResultadosDto> {
     const query = `
       SELECT 
         COUNT(*) as total_resultados,
@@ -346,7 +376,7 @@ export class ResultadosService {
       resultados_numericos: parseInt(stats.resultados_numericos) || 0,
       resultados_opcion: parseInt(stats.resultados_opcion) || 0,
       resultados_texto: parseInt(stats.resultados_texto) || 0,
-      resultados_memo: parseInt(stats.resultados_memo) || 0
+      resultados_memo: parseInt(stats.resultados_memo) || 0,
     };
   }
 
@@ -355,17 +385,19 @@ export class ResultadosService {
    * @param resultados - Resultados de la consulta
    * @returns Estructura formateada
    */
-  private formatearResultados(resultados: ResultadoConsulta[]): GrupoConProcedimientosDto[] {
+  private formatearResultados(
+    resultados: ResultadoConsulta[],
+  ): GrupoConProcedimientosDto[] {
     const grupos = new Map<number, GrupoTemporal>();
 
-    resultados.forEach(resultado => {
+    resultados.forEach((resultado) => {
       // Crear o obtener grupo
       if (!grupos.has(resultado.grupo_id)) {
         grupos.set(resultado.grupo_id, {
           grupoId: resultado.grupo_id,
           grupoCodigo: resultado.grupo_codigo,
           grupoNombre: resultado.grupo_nombre,
-          procedimientos: new Map<number, ProcedimientoConPruebasDto>()
+          procedimientos: new Map<number, ProcedimientoConPruebasDto>(),
         });
       }
 
@@ -380,23 +412,27 @@ export class ResultadosService {
             idCups: resultado.id_cups,
             metodo: resultado.metodo,
             codigo: resultado.cups_codigo,
-            nombre: resultado.cups_nombre
+            nombre: resultado.cups_nombre,
           },
-          pruebas: []
+          pruebas: [],
         });
       }
 
-      const procedimiento = grupo.procedimientos.get(resultado.procedimiento_id)!;
+      const procedimiento = grupo.procedimientos.get(
+        resultado.procedimiento_id,
+      )!;
 
       // Determinar el valor del resultado y valores de referencia
       let valor_ref_min: number | undefined = undefined;
       let valor_ref_max: number | undefined = undefined;
 
       if (resultado.opcion_min_f !== null || resultado.opcion_min_m !== null) {
-        valor_ref_min = (resultado.opcion_min_f ?? resultado.opcion_min_m) ?? undefined;
+        valor_ref_min =
+          resultado.opcion_min_f ?? resultado.opcion_min_m ?? undefined;
       }
       if (resultado.opcion_max_f !== null || resultado.opcion_max_m !== null) {
-        valor_ref_max = (resultado.opcion_max_f ?? resultado.opcion_max_m) ?? undefined;
+        valor_ref_max =
+          resultado.opcion_max_f ?? resultado.opcion_max_m ?? undefined;
       }
 
       // Agregar prueba con resultado
@@ -406,7 +442,7 @@ export class ResultadosService {
           codigoPrueba: resultado.codigo_prueba,
           nombrePrueba: resultado.nombre_prueba,
           unidad: resultado.unidad,
-          idTipoResultado: resultado.id_tipo_resultado
+          idTipoResultado: resultado.id_tipo_resultado,
         },
         resultado: {
           id: resultado.resultado_id,
@@ -421,17 +457,17 @@ export class ResultadosService {
           resMemo: resultado.res_memo,
           numProcesamientos: resultado.num_procesamientos,
           valor_ref_min,
-          valor_ref_max
-        }
+          valor_ref_max,
+        },
       };
 
       procedimiento.pruebas.push(pruebaConResultado);
     });
 
     // Convertir Maps a arrays
-    return Array.from(grupos.values()).map(grupo => ({
+    return Array.from(grupos.values()).map((grupo) => ({
       ...grupo,
-      procedimientos: Array.from(grupo.procedimientos.values())
+      procedimientos: Array.from(grupo.procedimientos.values()),
     }));
   }
 }

@@ -9,7 +9,8 @@ export class JwtExtractMiddleware implements NestMiddleware {
     if (auth?.startsWith('Bearer ')) {
       (req as any).accessToken = auth.substring(7);
     }
-    (req as any).ipAddr = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    (req as any).ipAddr =
+      req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     next();
   }
 }

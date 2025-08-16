@@ -6,8 +6,16 @@
 
 // Tipos básicos
 export type TipoResultado = 'numerico' | 'opcion' | 'texto' | 'memo';
-export type EstadoResultado = 'pendiente' | 'procesado' | 'validado' | 'reportado';
-export type EstadoOrden = 'registrada' | 'en_proceso' | 'completada' | 'cancelada';
+export type EstadoResultado =
+  | 'pendiente'
+  | 'procesado'
+  | 'validado'
+  | 'reportado';
+export type EstadoOrden =
+  | 'registrada'
+  | 'en_proceso'
+  | 'completada'
+  | 'cancelada';
 
 // Interfaces de dominio
 export interface Resultado {
@@ -183,19 +191,19 @@ export const TIPOS_RESULTADO = {
   NUMERICO: 1,
   OPCION: 2,
   TEXTO: 3,
-  MEMO: 4
+  MEMO: 4,
 } as const;
 
 export const ESTADOS_RESULTADO = {
   PENDIENTE: 'pendiente',
   PROCESADO: 'procesado',
   VALIDADO: 'validado',
-  REPORTADO: 'reportado'
+  REPORTADO: 'reportado',
 } as const;
 
 export const ESTADOS_ORDEN = {
   REGISTRADA: 'registrada',
   EN_PROCESO: 'en_proceso',
   COMPLETADA: 'completada',
-  CANCELADA: 'cancelada'
+  CANCELADA: 'cancelada',
 } as const;

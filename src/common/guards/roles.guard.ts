@@ -14,10 +14,10 @@ export class RolesGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     // Obtener los roles requeridos desde el metadata
-    const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(ROLES_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(
+      ROLES_KEY,
+      [context.getHandler(), context.getClass()],
+    );
 
     // Si no hay roles especificados, permitir acceso
     if (!requiredRoles) {
@@ -39,7 +39,7 @@ export class RolesGuard implements CanActivate {
 
     if (!hasRole) {
       throw new ForbiddenException(
-        `Acceso denegado. Roles requeridos: ${requiredRoles.join(', ')}`
+        `Acceso denegado. Roles requeridos: ${requiredRoles.join(', ')}`,
       );
     }
 
@@ -64,7 +64,7 @@ export class RolesGuard implements CanActivate {
           return UserRole.PACIENTE;
       }
     }
-    
+
     // Por defecto, asumir que es paciente
     return UserRole.PACIENTE;
   }

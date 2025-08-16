@@ -7,7 +7,7 @@ import {
   InfoPacienteYOrden,
   EstadisticasResultados,
   ESTADOS_RESULTADO,
-  TIPOS_RESULTADO
+  TIPOS_RESULTADO,
 } from './resultados.model';
 
 describe('ResultadosController', () => {
@@ -51,7 +51,9 @@ describe('ResultadosController', () => {
         orden: null,
       };
 
-      mockResultadosService.getResultadosCompletos.mockResolvedValue(expectedResult);
+      mockResultadosService.getResultadosCompletos.mockResolvedValue(
+        expectedResult,
+      );
 
       const result = await controller.obtenerResultadosCompletos(ordenId);
 
@@ -67,7 +69,9 @@ describe('ResultadosController', () => {
         grupos: [{ id: 1, nombre: 'Grupo Test', procedimientos: [] }],
       };
 
-      mockResultadosService.getGruposConResultados.mockResolvedValue(expectedResult);
+      mockResultadosService.getGruposConResultados.mockResolvedValue(
+        expectedResult,
+      );
 
       const result = await controller.obtenerGruposConResultados(ordenId);
 
@@ -77,9 +81,13 @@ describe('ResultadosController', () => {
 
     it('should throw HttpException when service throws error', async () => {
       const ordenId = 123;
-      mockResultadosService.getGruposConResultados.mockRejectedValue(new Error('Database error'));
+      mockResultadosService.getGruposConResultados.mockRejectedValue(
+        new Error('Database error'),
+      );
 
-      await expect(controller.obtenerGruposConResultados(ordenId)).rejects.toThrow(HttpException);
+      await expect(
+        controller.obtenerGruposConResultados(ordenId),
+      ).rejects.toThrow(HttpException);
     });
   });
 
@@ -91,7 +99,9 @@ describe('ResultadosController', () => {
         orden: { id: 123, numero: 'ORD-123', fecha: '2024-01-01' },
       };
 
-      mockResultadosService.getInfoPacienteYOrden.mockResolvedValue(expectedResult);
+      mockResultadosService.getInfoPacienteYOrden.mockResolvedValue(
+        expectedResult,
+      );
 
       const result = await controller.obtenerInfoPaciente(ordenId);
 
@@ -101,9 +111,13 @@ describe('ResultadosController', () => {
 
     it('should throw HttpException when service throws error', async () => {
       const ordenId = 123;
-      mockResultadosService.getInfoPacienteYOrden.mockRejectedValue(new Error('Database error'));
+      mockResultadosService.getInfoPacienteYOrden.mockRejectedValue(
+        new Error('Database error'),
+      );
 
-      await expect(controller.obtenerInfoPaciente(ordenId)).rejects.toThrow(HttpException);
+      await expect(controller.obtenerInfoPaciente(ordenId)).rejects.toThrow(
+        HttpException,
+      );
     });
   });
 
@@ -116,7 +130,9 @@ describe('ResultadosController', () => {
         pruebasPendientes: 2,
       };
 
-      mockResultadosService.getEstadisticasResultados.mockResolvedValue(expectedResult);
+      mockResultadosService.getEstadisticasResultados.mockResolvedValue(
+        expectedResult,
+      );
 
       const result = await controller.obtenerEstadisticas(ordenId);
 
@@ -126,9 +142,13 @@ describe('ResultadosController', () => {
 
     it('should throw HttpException when service throws error', async () => {
       const ordenId = 123;
-      mockResultadosService.getEstadisticasResultados.mockRejectedValue(new Error('Database error'));
+      mockResultadosService.getEstadisticasResultados.mockRejectedValue(
+        new Error('Database error'),
+      );
 
-      await expect(controller.obtenerEstadisticas(ordenId)).rejects.toThrow(HttpException);
+      await expect(controller.obtenerEstadisticas(ordenId)).rejects.toThrow(
+        HttpException,
+      );
     });
   });
 
@@ -146,9 +166,13 @@ describe('ResultadosController', () => {
 
     it('should throw HttpException when service throws error', async () => {
       const ordenId = 123;
-      mockResultadosService.verificarOrden.mockRejectedValue(new Error('Database error'));
+      mockResultadosService.verificarOrden.mockRejectedValue(
+        new Error('Database error'),
+      );
 
-      await expect(controller.verificarOrden(ordenId)).rejects.toThrow(HttpException);
+      await expect(controller.verificarOrden(ordenId)).rejects.toThrow(
+        HttpException,
+      );
     });
   });
 });

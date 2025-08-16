@@ -1,5 +1,12 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsString, IsDateString } from 'class-validator';
+import {
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsDateString,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class CrearNotificacionDto {
@@ -7,40 +14,45 @@ export class CrearNotificacionDto {
   @ApiProperty({ default: 'info' }) @IsString() @IsOptional() tipo?: string;
   @ApiProperty() @IsString() @IsNotEmpty() titulo: string;
   @ApiProperty() @IsString() @IsNotEmpty() mensaje: string;
-  @ApiProperty({ required: false, description: 'JSON libre' }) @IsOptional() datos?: any;
+  @ApiProperty({ required: false, description: 'JSON libre' })
+  @IsOptional()
+  datos?: any;
 }
 
 export class ListarNotificacionesQuery {
-  @ApiProperty() 
+  @ApiProperty()
   @Transform(({ value }) => parseInt(value))
-  @IsInt() 
+  @IsInt()
   idUsuario: number;
-  
-  @ApiProperty({ required: false }) 
+
+  @ApiProperty({ required: false })
   @Transform(({ value }) => value === 'true')
-  @IsBoolean() 
-  @IsOptional() 
+  @IsBoolean()
+  @IsOptional()
   soloNoLeidas?: boolean;
-  
-  @ApiProperty({ required: false }) 
+
+  @ApiProperty({ required: false })
   @Transform(({ value }) => parseInt(value))
-  @IsInt() 
-  @IsOptional() 
+  @IsInt()
+  @IsOptional()
   pagina?: number;
-  
-  @ApiProperty({ required: false, description: 'Filtrar por tipo de notificación' }) 
-  @IsString() 
-  @IsOptional() 
+
+  @ApiProperty({
+    required: false,
+    description: 'Filtrar por tipo de notificación',
+  })
+  @IsString()
+  @IsOptional()
   tipo?: string;
-  
-  @ApiProperty({ required: false, description: 'Fecha desde (YYYY-MM-DD)' }) 
-  @IsDateString() 
-  @IsOptional() 
+
+  @ApiProperty({ required: false, description: 'Fecha desde (YYYY-MM-DD)' })
+  @IsDateString()
+  @IsOptional()
   desde?: string;
-  
-  @ApiProperty({ required: false, description: 'Fecha hasta (YYYY-MM-DD)' }) 
-  @IsDateString() 
-  @IsOptional() 
+
+  @ApiProperty({ required: false, description: 'Fecha hasta (YYYY-MM-DD)' })
+  @IsDateString()
+  @IsOptional()
   hasta?: string;
 }
 
@@ -48,4 +60,6 @@ export class MarcarLeidaDto {
   @ApiProperty() @IsBoolean() leida: boolean;
 }
 
-export class ActualizarNotificacionDto extends PartialType(CrearNotificacionDto) {}
+export class ActualizarNotificacionDto extends PartialType(
+  CrearNotificacionDto,
+) {}

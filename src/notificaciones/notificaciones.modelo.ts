@@ -29,7 +29,11 @@ export class Notificacion {
   leida: boolean;
 
   @Index()
-  @Column({ name: 'fecha_creacion', type: 'timestamptz', default: () => 'now()' })
+  @Column({
+    name: 'fecha_creacion',
+    type: 'timestamptz',
+    default: () => 'now()',
+  })
   fechaCreacion: Date;
 
   @Column({ name: 'fecha_lectura', type: 'timestamptz', nullable: true })

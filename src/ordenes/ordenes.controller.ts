@@ -15,7 +15,9 @@ export class OrdenesController {
   constructor(private service: OrdenesService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Listar órdenes del paciente (paginación y filtros)' })
+  @ApiOperation({
+    summary: 'Listar órdenes del paciente (paginación y filtros)',
+  })
   async listar(@Query() q: ListarOrdenesQuery) {
     return this.service.listar(+q.personaId, {
       pagina: q.pagina ? +q.pagina : 1,
@@ -27,7 +29,9 @@ export class OrdenesController {
   }
 
   @Get(':id/resultados')
-  @ApiOperation({ summary: 'Detalle de resultados agrupados por grupo/procedimiento' })
+  @ApiOperation({
+    summary: 'Detalle de resultados agrupados por grupo/procedimiento',
+  })
   async resultados(@Param('id') id: string) {
     console.log('=== ENDPOINT /ordenes/:id/resultados LLAMADO ===');
     console.log('ID de orden recibido:', id);

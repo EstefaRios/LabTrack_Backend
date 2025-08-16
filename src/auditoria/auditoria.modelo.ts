@@ -60,4 +60,3 @@ export class Auditoria {
   @Column({ name: 'despues', type: 'jsonb', nullable: true })
   despues?: any;
 }
-

@@ -26,10 +26,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       status = exception.getStatus();
       const exceptionResponse = exception.getResponse();
-      
+
       if (typeof exceptionResponse === 'string') {
         message = exceptionResponse;
-      } else if (typeof exceptionResponse === 'object' && exceptionResponse !== null) {
+      } else if (
+        typeof exceptionResponse === 'object' &&
+        exceptionResponse !== null
+      ) {
         const responseObj = exceptionResponse as any;
         message = responseObj.message || responseObj.error || message;
         error = responseObj.error || error;
@@ -38,8 +41,8 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     // Manejo de errores de base de datos (TypeORM/PostgreSQL)
     else if (exception instanceof QueryFailedError) {
       status = HttpStatus.BAD_REQUEST;
-      const pgError = exception.driverError as any;
-      
+      const pgError = exception.driverError;
+
       switch (pgError?.code) {
         case '23505': // unique_violation
           message = 'Ya existe un registro con estos datos';
@@ -70,7 +73,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
           error = 'Database Error';
           break;
       }
-      
+
       // Log del error completo para debugging
       this.logger.error(
         `Database Error: ${pgError?.code} - ${pgError?.detail || pgError?.message}`,

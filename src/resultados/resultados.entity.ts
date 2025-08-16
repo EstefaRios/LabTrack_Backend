@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 /**
  * Entidad para mapear la tabla de resultados de laboratorio
@@ -23,7 +31,13 @@ export class ResultadoLaboratorio {
   @Column({ name: 'res_opcion', nullable: true })
   resOpcion?: string;
 
-  @Column({ name: 'res_numerico', type: 'decimal', precision: 10, scale: 4, nullable: true })
+  @Column({
+    name: 'res_numerico',
+    type: 'decimal',
+    precision: 10,
+    scale: 4,
+    nullable: true,
+  })
   resNumerico?: number;
 
   @Column({ name: 'res_texto', nullable: true })
@@ -35,10 +49,22 @@ export class ResultadoLaboratorio {
   @Column({ name: 'num_procesamientos', default: 0 })
   numProcesamientos: number;
 
-  @Column({ name: 'valor_ref_min', type: 'decimal', precision: 10, scale: 4, nullable: true })
+  @Column({
+    name: 'valor_ref_min',
+    type: 'decimal',
+    precision: 10,
+    scale: 4,
+    nullable: true,
+  })
   valorRefMin?: number;
 
-  @Column({ name: 'valor_ref_max', type: 'decimal', precision: 10, scale: 4, nullable: true })
+  @Column({
+    name: 'valor_ref_max',
+    type: 'decimal',
+    precision: 10,
+    scale: 4,
+    nullable: true,
+  })
   valorRefMax?: number;
 
   @Column({ name: 'fecha_resultado', type: 'timestamp', nullable: true })
@@ -77,10 +103,22 @@ export class PruebaLaboratorio {
   @Column({ name: 'id_tipo_resultado' })
   idTipoResultado: number;
 
-  @Column({ name: 'valor_ref_min', type: 'decimal', precision: 10, scale: 4, nullable: true })
+  @Column({
+    name: 'valor_ref_min',
+    type: 'decimal',
+    precision: 10,
+    scale: 4,
+    nullable: true,
+  })
   valorRefMin?: number;
 
-  @Column({ name: 'valor_ref_max', type: 'decimal', precision: 10, scale: 4, nullable: true })
+  @Column({
+    name: 'valor_ref_max',
+    type: 'decimal',
+    precision: 10,
+    scale: 4,
+    nullable: true,
+  })
   valorRefMax?: number;
 
   @Column({ name: 'metodo', nullable: true })

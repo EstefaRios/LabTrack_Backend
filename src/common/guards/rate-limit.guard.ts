@@ -6,7 +6,10 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { RATE_LIMIT_KEY, RateLimitConfig } from '../decorators/rate-limit.decorator';
+import {
+  RATE_LIMIT_KEY,
+  RateLimitConfig,
+} from '../decorators/rate-limit.decorator';
 import { JwtUser } from '../decorators/current-user.decorator';
 
 // Estructura para almacenar información de rate limiting
@@ -28,7 +31,7 @@ export class RateLimitGuard implements CanActivate {
     // Obtener configuración de rate limiting desde el metadata
     const rateLimitConfig = this.reflector.getAllAndOverride<RateLimitConfig>(
       RATE_LIMIT_KEY,
-      [context.getHandler(), context.getClass()]
+      [context.getHandler(), context.getClass()],
     );
 
     // Si no hay configuración de rate limiting, permitir acceso
@@ -59,8 +62,10 @@ export class RateLimitGuard implements CanActivate {
 
     // Verificar si se excedió el límite
     if (rateLimitInfo.count > rateLimitConfig.limit) {
-      const resetTimeSeconds = Math.ceil((rateLimitInfo.resetTime - now) / 1000);
-      
+      const resetTimeSeconds = Math.ceil(
+        (rateLimitInfo.resetTime - now) / 1000,
+      );
+
       throw new HttpException(
         {
           statusCode: HttpStatus.TOO_MANY_REQUESTS,
@@ -68,7 +73,7 @@ export class RateLimitGuard implements CanActivate {
           error: 'Too Many Requests',
           retryAfter: resetTimeSeconds,
         },
-        HttpStatus.TOO_MANY_REQUESTS
+        HttpStatus.TOO_MANY_REQUESTS,
       );
     }
 

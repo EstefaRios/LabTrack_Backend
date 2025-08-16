@@ -8,15 +8,19 @@ describe('NotificacionesController', () => {
   beforeEach(async () => {
     const module = await Test.createTestingModule({
       controllers: [NotificacionesController],
-      providers: [{
-        provide: NotificacionesService,
-        useValue: {
-          listar: jest.fn().mockResolvedValue({ total: 0, pagina: 1, data: [] }),
-          crear: jest.fn().mockResolvedValue({ id: 1 }),
-          marcarLeida: jest.fn().mockResolvedValue({ id: 1, leida: true }),
-          eliminar: jest.fn().mockResolvedValue({ ok: true }),
+      providers: [
+        {
+          provide: NotificacionesService,
+          useValue: {
+            listar: jest
+              .fn()
+              .mockResolvedValue({ total: 0, pagina: 1, data: [] }),
+            crear: jest.fn().mockResolvedValue({ id: 1 }),
+            marcarLeida: jest.fn().mockResolvedValue({ id: 1, leida: true }),
+            eliminar: jest.fn().mockResolvedValue({ ok: true }),
+          },
         },
-      }],
+      ],
     }).compile();
     ctrl = module.get(NotificacionesController);
   });

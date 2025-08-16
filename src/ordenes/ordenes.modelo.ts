@@ -27,8 +27,10 @@ export class Orden {
   @Column({ type: 'numeric', precision: 10, scale: 0 }) orden: string;
   @Column({ type: 'timestamp' }) fecha: Date;
   @Column({ name: 'id_historia', nullable: true }) idHistoria?: number;
-  @Column({ name: 'id_profesional_ordena', nullable: true }) idProfesional?: number;
-  @Column({ name: 'profesional_externo', default: false }) profesionalExterno: boolean;
+  @Column({ name: 'id_profesional_ordena', nullable: true })
+  idProfesional?: number;
+  @Column({ name: 'profesional_externo', default: false })
+  profesionalExterno: boolean;
 }
 
 // lab_p_grupos
@@ -72,11 +74,21 @@ export class OrdenResultado {
   @Column({ name: 'res_numerico', nullable: true }) resNumerico?: string;
   @Column({ name: 'res_texto', nullable: true }) resTexto?: string;
   @Column({ name: 'res_memo', nullable: true }) resMemo?: string;
-  @Column({ name: 'num_procesamientos', nullable: true }) numProcesamientos?: number;
+  @Column({ name: 'num_procesamientos', nullable: true })
+  numProcesamientos?: number;
 }
 
 // Tipo para compatibilidad con consultas existentes
 export type OrdenResultadoRaw = {
-  id: number; fecha: string; id_orden: number; id_procedimiento: number; id_prueba: number;
-  id_pruebaopcion?: number; res_opcion?: string; res_numerico?: string; res_texto?: string; res_memo?: string; num_procesamientos?: number;
+  id: number;
+  fecha: string;
+  id_orden: number;
+  id_procedimiento: number;
+  id_prueba: number;
+  id_pruebaopcion?: number;
+  res_opcion?: string;
+  res_numerico?: string;
+  res_texto?: string;
+  res_memo?: string;
+  num_procesamientos?: number;
 };

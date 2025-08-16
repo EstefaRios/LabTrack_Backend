@@ -21,7 +21,10 @@ export class AuditInterceptor implements NestInterceptor {
   ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const action = this.reflector.get<string>(AUDIT_ACTION, context.getHandler());
+    const action = this.reflector.get<string>(
+      AUDIT_ACTION,
+      context.getHandler(),
+    );
     if (!action) return next.handle();
 
     const req = context.switchToHttp().getRequest();
@@ -37,7 +40,9 @@ export class AuditInterceptor implements NestInterceptor {
       'unknown';
     const clientIp = Array.isArray(ipRaw)
       ? ipRaw[0]
-      : String(ipRaw ?? '').split(',')[0].trim() || 'unknown';
+      : String(ipRaw ?? '')
+          .split(',')[0]
+          .trim() || 'unknown';
 
     const userAgent = (req.headers['user-agent'] as string) || 'unknown';
 
@@ -85,7 +90,9 @@ export class AuditInterceptor implements NestInterceptor {
             newData: this.sanitizeResult(result),
           });
         } catch (e: any) {
-          this.logger.warn(`No se pudo guardar auditoría OK: ${e?.message ?? e}`);
+          this.logger.warn(
+            `No se pudo guardar auditoría OK: ${e?.message ?? e}`,
+          );
         }
       }),
 
@@ -106,7 +113,9 @@ export class AuditInterceptor implements NestInterceptor {
             newData: { error: error?.message ?? 'unknown' },
           });
         } catch (e: any) {
-          this.logger.warn(`No se pudo guardar auditoría ERROR: ${e?.message ?? e}`);
+          this.logger.warn(
+            `No se pudo guardar auditoría ERROR: ${e?.message ?? e}`,
+          );
         }
         throw error;
       }),
@@ -118,7 +127,8 @@ export class AuditInterceptor implements NestInterceptor {
     if (!body || typeof body !== 'object') return body;
     const sanitized: Record<string, any> = { ...body };
     const sensitiveFields = ['password', 'token', 'secret', 'key', 'auth'];
-    for (const field of sensitiveFields) if (field in sanitized) sanitized[field] = '[REDACTED]';
+    for (const field of sensitiveFields)
+      if (field in sanitized) sanitized[field] = '[REDACTED]';
     return sanitized;
   }
 
@@ -126,7 +136,8 @@ export class AuditInterceptor implements NestInterceptor {
     if (!result || typeof result !== 'object') return result;
     const sanitized: Record<string, any> = { ...result };
     const sensitiveFields = ['password', 'token', 'secret', 'key'];
-    for (const field of sensitiveFields) if (field in sanitized) sanitized[field] = '[REDACTED]';
+    for (const field of sensitiveFields)
+      if (field in sanitized) sanitized[field] = '[REDACTED]';
     return sanitized;
   }
 

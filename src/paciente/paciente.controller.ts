@@ -18,7 +18,9 @@ export class PacienteController {
   }
 
   @Get('listar')
-  @ApiOperation({ summary: 'Listar todos los pacientes con paginación y búsqueda' })
+  @ApiOperation({
+    summary: 'Listar todos los pacientes con paginación y búsqueda',
+  })
   async listarPacientes(@Query() q: ListarPacientesQuery) {
     return this.service.listarPacientes(q.pagina, q.limite, q.busqueda);
   }

@@ -13,6 +13,9 @@ import 'reflect-metadata';
 // Extender el tipo Request para incluir la propiedad user
 interface AuthenticatedRequest extends Request {
   user?: JwtUser;
+  params: any;
+  query: any;
+  body: any;
 }
 
 // Metadata key para el decorator
@@ -40,27 +43,32 @@ export class ResourceOwnerGuard implements CanActivate {
 
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
     const user = request.user;
-    
+
     if (!user) {
       throw new ForbiddenException('Usuario no autenticado');
     }
 
     // Obtener el valor del parámetro de la URL, query o body
     const resourceUserId = this.extractUserId(request, paramName);
-    
+
     if (!resourceUserId) {
       throw new BadRequestException(`Parámetro ${paramName} requerido`);
     }
 
     // Validar que el usuario solo acceda a sus propios recursos
     if (user.sub !== parseInt(resourceUserId.toString(), 10)) {
-      throw new ForbiddenException('No tienes permisos para acceder a este recurso');
+      throw new ForbiddenException(
+        'No tienes permisos para acceder a este recurso',
+      );
     }
 
     return true;
   }
 
-  private extractUserId(request: AuthenticatedRequest, paramName: string): string | number | null {
+  private extractUserId(
+    request: AuthenticatedRequest,
+    paramName: string,
+  ): string | number | null {
     // Buscar en parámetros de ruta
     if (request.params[paramName]) {
       return request.params[paramName];

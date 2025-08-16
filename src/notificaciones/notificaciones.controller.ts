@@ -1,9 +1,25 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { NotificacionesService } from './notificaciones.service';
-import { CrearNotificacionDto, ListarNotificacionesQuery, MarcarLeidaDto } from './notificaciones.dto';
+import {
+  CrearNotificacionDto,
+  ListarNotificacionesQuery,
+  MarcarLeidaDto,
+} from './notificaciones.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { ResourceOwnerGuard, ResourceOwner } from '../common/guards/resource-owner.guard';
+import {
+  ResourceOwnerGuard,
+  ResourceOwner,
+} from '../common/guards/resource-owner.guard';
 import { NotificationOwnerGuard } from '../common/guards/notification-owner.guard';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { CurrentUserId } from '../common/decorators/current-user.decorator';
@@ -22,7 +38,9 @@ export class NotificacionesController {
   @UseGuards(ResourceOwnerGuard)
   @ResourceOwner('idUsuario')
   @Audit('LISTAR_NOTIFICACIONES')
-  @ApiOperation({ summary: 'Listar notificaciones de un usuario con filtros y paginación' })
+  @ApiOperation({
+    summary: 'Listar notificaciones de un usuario con filtros y paginación',
+  })
   listar(@Query() q: ListarNotificacionesQuery) {
     return this.service.listar(q);
   }
@@ -39,7 +57,10 @@ export class NotificacionesController {
   @Post()
   @Audit('CREAR_NOTIFICACION')
   @ApiOperation({ summary: 'Crear notificación' })
-  crear(@Body() dto: CrearNotificacionDto, @CurrentUserId() currentUserId: number) {
+  crear(
+    @Body() dto: CrearNotificacionDto,
+    @CurrentUserId() currentUserId: number,
+  ) {
     // Asegurar que el usuario solo puede crear notificaciones para sí mismo
     dto.idUsuario = currentUserId;
     return this.service.crear(dto);

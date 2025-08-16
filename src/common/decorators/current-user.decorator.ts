@@ -21,11 +21,11 @@ export const CurrentUser = createParamDecorator(
   (data: keyof JwtUser | undefined, ctx: ExecutionContext): JwtUser | any => {
     const request = ctx.switchToHttp().getRequest<AuthenticatedRequest>();
     const user = request.user;
-    
+
     if (!user) {
       return null;
     }
-    
+
     // Si se especifica una propiedad específica, devolverla
     return data ? user[data] : user;
   },
@@ -36,7 +36,7 @@ export const CurrentUserId = createParamDecorator(
   (data: unknown, ctx: ExecutionContext): number | null => {
     const request = ctx.switchToHttp().getRequest<AuthenticatedRequest>();
     const user = request.user;
-    
+
     return user?.sub || null;
   },
 );
