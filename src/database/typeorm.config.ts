@@ -9,15 +9,19 @@ import { CreatePerformanceIndexes1755201400000 } from './migrations/175520140000
 
 export const typeormConfig: DataSourceOptions = {
   type: 'postgres',
-  host: process.env.DB_HOST,
-  port: +process.env.DB_PORT!,
-  username: process.env.DB_USER,
-  password: String(process.env.DB_PASS),
-  database: process.env.DB_NAME,
-  entities: [Persona, ListaOpcion, Tarjetero, Documento, Orden, Procedimiento, Grupo, Prueba, OrdenResultado, Auditoria, Notificacion],
+  url: process.env.DATABASE_URL,             // INTERNAL o EXTERNAL de Render
+  ssl: process.env.NODE_ENV === 'production'
+    ? { rejectUnauthorized: false }
+    : false,
+  entities: [
+    Persona, ListaOpcion, Tarjetero, Documento, Orden,
+    Procedimiento, Grupo, Prueba, OrdenResultado,
+    Auditoria, Notificacion
+  ],
   migrations: [CreatePerformanceIndexes1755201400000],
-  migrationsRun: false, // Ejecutar manualmente
-  synchronize: false, // ¡NO en prod! Tablas del dump ya existen
+  migrationsRun: false,                      // correrlas manualmente si las usas
+  synchronize: false,                        // en prod: false
   namingStrategy: new SnakeNamingStrategy(),
-  logging: ['query', 'error'], // logging temporal para validación
+  logging: ['error'],                        // baja el ruido en prod
+  extra: { max: 10 },                        // pool moderado (plan free)
 };
